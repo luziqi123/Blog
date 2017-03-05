@@ -1,6 +1,7 @@
 ---
 title: Android Studio 下导出带混淆Jar包
 date: 2017-3-3
+categories: Android
 ---
 
 
@@ -8,6 +9,8 @@ date: 2017-3-3
 # Android Studio 下导出带混淆Jar包 
 
 偶然间遇到了将Module打成jar包的需求 , 并且需要混淆 , 网上很多资料都有些不尽人意 , 这里分享一下操作流程 .  
+
+<!-- more -->
 
 1. 首先你要有一个Android Library的Module , 并已经跟主Module为依赖关系 .
 2. 然后在这个Module下的build.gradle中加入如下代码 , 注释已经很清楚了 . 

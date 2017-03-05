@@ -1,6 +1,7 @@
 ---
 title: Android性能优化
 date: 2017-2-26
+categories: Android
 ---
 
 
