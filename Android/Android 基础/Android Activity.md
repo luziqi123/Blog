@@ -1,8 +1,3 @@
----
-title: Activity的启动模式
-date: 2017-2-25
----
-
 
 
 [TOC]
@@ -92,3 +87,42 @@ Activity有4中启动方式：分别为：
 **FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS**
 
 在用户使用最近任务的时候,该Task不会出现在最近任务中,等同于在XML中设置的android:excludeFromRecents="true"
+
+# Activity生命周期
+
+百年不变的基础问题 , 无非是在跟几个不同时期的回调方法的做周旋 .
+
+- **onCreate** 一直到onDestroy为activity的全部生命周期 , 创建时调用 , 此时Activity不可见 , 带一个Bundle参数 saveInstanceState , 如果你的activity被系统回收了 , 再次打开需要重新创建 , 这个参数可以用来恢复一些必要数据 . 
+
+
+- **onStart** 一直到onStop都为activity的可见生命周期 , 这说明了到了这里activity已经为可见了 . activity交替的对用户可见或隐藏时 , 也会多次调用onStart和onStop.
+- **onResume** 一直到onPause都为activity的前台生命周期 , 该方法执行后activity完全加载完毕 , 已经可见并可以与用户交互了.
+- **onPause** 退到后台时调用 , 比如被一个Dialog覆盖了 ,Dialog消失调用onResume , 所以说这个方法可以说是用户离开activity的必经之路.
+- **onStop** 当activity不会长时间显示的时候调用 , 也就是说 , 只要这个activity还可见 , 那就不会调用该方法.
+- **onDestroy** activity被销毁的时候调用.注意 , 这里的调用时机是不确定的 , 有时候并不会马上调用这个方法.
+- **onRestart** 当activity从后台重新返回前台的时候回调用该方法.
+
+其他:
+
+- **onSaveInsanceState** 在上面的onCreate方法中提到了saveInstanceState 参数 , 用来恢复必要数据 , 那什么时候存呢? 就在这个方法里了 , 当遇到内存不足/屏幕旋转或其他情况需要由系统而不是用户来销毁一个Activity的时候 , 就会调用该方法 , 你可以在这个方法中保存这个页面当前的状态 , 在下次onCreate的时候通过saveInstanceState拿到你保存过的这些东西.
+
+
+- **onRestoreInstanceState** 这个方法中也带有一个saveInstanceState , 并且和onCreate附带的那个参数是一样的 , 这个方法也是用来恢复activity的状态 , 需要注意的是 , 较恢复数据而言 , onCreate是在被销毁后从新创建时被调用 , 而onRestoreInstanceState则是在activity 没有被销毁且重新出现的时候被调用的 . 
+
+
+- **onNewIntent** 若一个activity已经在栈中 , 且该activity的启动模式又不需要重新创建一个新的实例 , 在调用startActivity时这个activity的方法调用则为 onNewIntent()---->onResart()------>onStart()----->onResume().
+
+
+- **onRetainNonConfigurationInstance** 到这里 , 你已经知道了在onSaveInsanceState中保存数据 , 然后再onRestoreInstanceState 或 onCreate中恢复数据 , onRetainNonConfigurationInstance 方法同样可以保存数据 , 不同的是他可以返回一个Object .
+
+
+- **getLastNonConfigurationInstance** 上面已经提到了 , onRetainNonConfigurationInstance 方法返回一个Object , 这个方法则可以得到那个Object .
+- **onWindowFocusChanged** 当Activity焦点发生变化时被调用 .
+
+# Activity的状态
+
+running / paused / stopped / killed . 
+
+活动状态一切正常,在栈顶 / 失去焦点,不在栈顶,并不是被销毁,可能被回收 / 被完全覆盖 , 完全不可见 , 也可能被销毁 ./ 已经被回收了.
+
+onStart()的时候activity已经可以看见了,但无法交互. onResume() 可见并可交互. onPause调用之后activity就不能与用户交互了 , onStop调用之后,activity就有可能被回收. onRestart()从消失到可见时候调用.

@@ -1,16 +1,29 @@
----
-title: Android性能优化
-date: 2017-2-26
-categories: Android
----
-
-
-
 [TOC]
+
+
+
+> 关于性能优化 , 主要包含以下一些方面:
+>
+> - 界面感知 , 主要包含 界面显示流畅度 , 操作流畅度 , 运行流畅度 .
+> - 内存优化
+> - 电量优化
+> - 网络优化
+>
+> 使用到的优化工具:
+>
+> - StrictMode 主要用来限制应用做一些不符合性能规范的事情. 一般用来检测主线程中的耗 时操作和阻塞 
+> - Systrace 收集和检测时间信息的工具, 它能显示CPU和时间被消耗在哪儿了
+> - HierarchyViewer 提供了一个可视化的界面来观测布局的层级, 让我们可以优化布局层级
+> - TraceView 一个图形化的工具, 用来展示和分析方法的执行时间
+> - CPU/GPU/Network/Memory Monitor 分别监测CPU/GPU/网络/内存的使用情况
+> - BatteryHistorian Google出品, 通过Android系统的bugreport文件来做电量使用分析的工具
+> - Emmagee 针对Android App的CPU, 内存, 网络, 电量等多项综合的测试分析
+> - Square 监测内存泄露
+> - AndroidDevMetrics 检测Activity生命周期执行性能, Dagger2注入性能以及帧率性能
 
 # 内存优化
 
-## 防止内存泄漏——夜用大片防侧漏
+## 内存泄漏——夜用大片防侧漏
 
 JAVA是在JVM所虚拟出的内存环境中运行的，JVM的内存可分为三个区：堆(heap)、栈(stack)和方法区(method)。
 
@@ -84,7 +97,7 @@ GC会从根节点（GC Roots）开始对heap进行遍历 , 到最后，部分没
 
 ---
 
-### Handler的正确写法
+## Handler的正确写法
 
 正常情况下，本着方便快捷，省时省力的思想，我们会将Handler写成这副德性：
 ```java
@@ -192,7 +205,7 @@ public class ActivitySigin extends BaseActivity implements Handler.Callback{
 
 -------
 
-### 单例，不仅仅存在线程安全问题
+## 单例，不仅仅存在线程安全问题
 
 单例模式深受广大开发者的喜爱，但从相对论的角度来看，肉吃多了也能死人。所以，在适合的情况下使用单例。而在单例的实现方式上，更多人关注线程安全方面的问题，但是内存泄漏问题同样重要。
 在用LeakCanary检测APP内存泄漏的时候，发现N多地方出现了单例造成的内存泄漏。
@@ -251,7 +264,7 @@ private XXXManager(Context context) {
 
 ---
 
-### 多线程的滥用——你用多少内存换来懒惰？
+## 多线程的滥用——你用多少内存换来懒惰？
 
 我相信很多人都这么干过：
 ```java
@@ -275,7 +288,7 @@ static class MyRunnable implements Runnable{
 
 ---
 
-### 内存抖动
+## 内存抖动
 
 在Android studio中我们可以方便的看到App运行时的内存使用情况，下面这张图就是典型的内存抖动了， 内存抖动是因为大量的对象被创建又在短时间内马上被释放。
 瞬间产生大量的对象会严重占用Young Generation的内存区域，当达到阀值，剩余空间不够的时候，也会触发GC。即使每次分配的对象占用了很少的内存，但是他们叠加在一起会增加Heap的压力，从而触发更多其他类型的GC。这个操作有可能会影响到帧率，并使得用户感知到性能问题。
@@ -286,9 +299,9 @@ static class MyRunnable implements Runnable{
 
 ---
 
-### 选择合适的容器
+## 选择合适的容器
 
-####ArryaMap
+###ArryaMap
 ArrayMap是Android提供的用来替代HashMap的集合
 对象个数的数量级在千以内
 数据组织形式包含Map结构
@@ -297,14 +310,14 @@ ArrayMap是Android提供的用来替代HashMap的集合
 ![Alt text](http://img.blog.csdn.net/20170224133249318?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMjk4NDA1NA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
 [原文地址](https://liuzhichao.com/p/832.html)
 
-####Sparse系列
+###Sparse系列
 为了避免HashMap的自动装箱（autoboxing）行为，Android系统提供了SparseBoolMap，SparseIntMap，SparseLongMap，LongSparseMap等容器。
 
 另外这些容器的使用场景也和ArrayMap一致，需要满足数量级在千以内，数据组织形式需要包含Map结构。
 
 ----
 
-###for循环的秘密
+##for循环的秘密
 遍历容器是编程里面一个经常遇到的场景。在Java语言中，使用Iterate是一个比较常见的方法。可是在Android开发中，大家却尽量避免使用Iterator来执行遍历操作。下面我们看下在Android上可能用到的三种不同的遍历方法：
 ![Alt text](http://img.blog.csdn.net/20170224133014096?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMjk4NDA1NA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
 
@@ -315,7 +328,7 @@ ArrayMap是Android提供的用来替代HashMap的集合
 
 ---
 
-### 你所不知道的枚举真面目
+## 你所不知道的枚举真面目
 
 枚举往往需要超过一倍多的内存静态常量。在Android中你应该严格避免使用枚举。
 总的来说枚举更耗内存，并且在编译之后的dex文件也会占用更多的空间。
@@ -324,9 +337,48 @@ ArrayMap是Android提供的用来替代HashMap的集合
 
 ----
 
-# UI优化
+# 界面感知优化
 
-## 真的是越小越好
+## 召之即来挥之即去-App启动优化
+
+App的启动大致可以分为冷启动和热启动 , 说白了就是App在启动的时候进程是否存在 , 存在的话就是热启动 , 不存在就是冷启动. 在冷启动状态下,  通常会出现短时间的白屏或黑屏, 导致该现象的原因无外乎两个: 
+
+- Application的onCreate中做了过多耗时操作.
+- 首屏Activity的渲染 , 这是由于系统造成的.
+
+第一个不用说了, 在任何时间地点都不应当在主线程中做耗时操作 , 具体可以通过开线程或使用IntentService或其他XXX方法来解决. 
+
+第二个可以通过设置一个Activity的主题背景来解决 , 为一个SplashActivity设置主题背景:
+
+styles.xml:
+
+```xml
+<style name="SplashTheme" parent="AppTheme">
+    <item name="android:windowBackground">@drawable/xxx</item>
+</style>
+```
+
+AndroidManifest.xml:
+
+```xml
+<activity
+  android:name="SplashActivity"
+  android:screenOrientation="portrait"
+  android:theme="@style/SplashTheme">
+  <intent-filter>
+      <action android:name="android.intent.action.MAIN"/>
+      <category android:name="android.intent.category.LAUNCHER"/>
+  </intent-filter>
+</activity>
+```
+
+styles.xml中@drawable/xxx的xxx可以是一张图片 , 也可以是Layout-list制作的背景图片 , 当然更偏向于后者.
+
+至此你的App在启动后的第一时间就可以显示出一张图片来假装已经渲染完毕了 . 
+
+
+
+## 真的是越小越好-图片缩放
 
 在Android里面一个相对操作比较繁重的事情是对Bitmap进行旋转，缩放，裁剪等等。例如在一个圆形的钟表图上，我们把时钟的指针抠出来当做单独的图片进行旋转会比旋转一张完整的圆形图的所形成的帧率要高56%。
 ![Alt text](http://img.blog.csdn.net/20170224133005900?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMjk4NDA1NA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
@@ -351,7 +403,7 @@ Android系统每隔16ms发出VSYNC信号，触发对UI进行渲染，这称作�
 
 在开发过程中，我们或多或少的会用到Bitmap，但是如果处理不当，就会发生OOM或是让你的程序变的卡顿并异常的消耗内存，对于Bitmap，我们应该清楚以下几点：
 
-####  **-如何高效的加载大图**
+###  **-如何高效的加载大图**
 
 在大多数情况下，图片的实际大小都比需要呈现的尺寸大很多，考虑到应用是在有限的内存下工作的，***理想情况是我们只需要在内存中加载一个低分辨率的照片即可***。这一小结我们会介绍如何通过加载一个缩小版本的图片，从而避免超出程序的内存限制。
 
@@ -453,11 +505,11 @@ main(){
 
 除此之外，我们还可以使用inScaled，inDensity，inTargetDensity的属性来对解码图片做处理。
 
-####  **-提升bitmap的循环效率**
+###  **-提升bitmap的循环效率**
 // TODO 需要单独写一篇
-####  **-非UI线程处理Bitmap**
+###  **-非UI线程处理Bitmap**
 // TODO 需要单独写一篇
-####  **-Bitmap缓存**
+###  **-Bitmap缓存**
 // TODO 需要单独写一篇
 
 ----
@@ -468,7 +520,7 @@ main(){
 
 对于布局优化，有以下几点建议：
 
-#### ***-merge和include——减少节点***
+## ***-merge和include——减少节点***
 
 在一些无需太多属性的根节点上，你可以使用merge，他会为你减少一层节点，如果你想优化你的布局，减少节点是第一步要做的，通过include将这些merge为根节点的布局引入进来，再用HierarchyViewer看一下你的层级吧，它变的更扁平化了。
 
@@ -615,11 +667,14 @@ hasOverlappingRendering(){
 
 
 
+# 电量优化
 
-## **电量优化**
 - AP 和 BP
 - 唤醒屏幕
-## **网络优化**
+
+
+# 网络优化
+
 - 打包发送网络请求
 ## **关于生命周期**
 - 在onCreate中处理你的复活状态
