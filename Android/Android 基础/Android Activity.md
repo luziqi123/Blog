@@ -126,3 +126,9 @@ running / paused / stopped / killed .
 活动状态一切正常,在栈顶 / 失去焦点,不在栈顶,并不是被销毁,可能被回收 / 被完全覆盖 , 完全不可见 , 也可能被销毁 ./ 已经被回收了.
 
 onStart()的时候activity已经可以看见了,但无法交互. onResume() 可见并可交互. onPause调用之后activity就不能与用户交互了 , onStop调用之后,activity就有可能被回收. onRestart()从消失到可见时候调用.
+
+# Activity与Window
+
+Activity只负责生命周期和事件处理
+Window只控制视图
+一个Activity包含一个Window，如果Activity没有Window，那就相当于Service

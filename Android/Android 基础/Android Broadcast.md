@@ -45,8 +45,6 @@
 
 # 工作流程
 
-## 注册流程
-
 AMS:  ActivityManagerService , 
 
 1. **静态注册**
@@ -55,9 +53,11 @@ AMS:  ActivityManagerService ,
 
 2. **动态注册**
 
-   动态注册过程是从ContextWrapper的registerReceiver方法开始的 , 真正的实现在ContextImpl的registerReceiver()里面 , 在这个方法中, 系统首先从mPackageInfo获取IIntentReceiver对象 , 然后再采用跨进程的方式向AMS发送广播注册请求 . 
+   动态注册过程是从ContextWrapper的registerReceiver方法开始的 , 真正的实现在ContextImpl的registerReceiver()里面 , 在这个方法中, 系统首先从mPackageInfo或者从LoadedApk.ReceiverDispatcher获取IIntentReceiver对象 , 再由AMS发送广播注册请求 . 
 
+# 注意事项
 
+- 因为静态注册耗电、占内存、不受程序生命周期影响，所以Google在Android 8.0上禁止了大部分广播的静态注册，以此来减少耗电、增加待机时间、节省内存空间、提升性能。
 
 
 
