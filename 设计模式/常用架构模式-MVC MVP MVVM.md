@@ -1,13 +1,3 @@
----
-title: 常用架构模式-MVC MVP MVVM
-date: 2016-3-20
-categories: 设计模式
----
-
-分别介绍了MVC / MVP / MVVM 的区别和结构
-
-<!--more-->
-
 ### MVC / MVP / MVVM 他们之间的区别
 
 **MVC : ** 

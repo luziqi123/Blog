@@ -1,12 +1,6 @@
----
-title: Dagger2工作原理分析
-date: 2017-6
-categories: 其他
----
+
 
 DI（依赖注入）设计模式已经不是什么新鲜技术了，但是最近频繁在 Android 开发中用到，主要是因为它提供了一些很棒的框架。
-
-<!--more-->
 
 在开始一个例子之前, 我们需要先弄清楚大致的用法 , 依赖注入说白了就是将对象的初始化拿到另外的地方去做 , 既然需要单独抽出来做初始化的功能 , 那么必将有一个可以配置的地方 , 不然谁知道你要实例化哪个对象 ? Spring框架是通过XML来配置对象初始化的 , 而Dagger2则通过Java注解的方式来完成 , 既然是注解 , 那么就看看常用的几个注解意思:
 
@@ -50,10 +44,10 @@ DI（依赖注入）设计模式已经不是什么新鲜技术了，但是最近
 
   ```java
   public class HomeActivity extends AppCompatActivity {
-
+  
       HomePresenter mPresenter;
       TextView textView;
-
+  
       @Override
       protected void onCreate(Bundle savedInstanceState) {
           super.onCreate(savedInstanceState);
@@ -63,7 +57,7 @@ DI（依赖注入）设计模式已经不是什么新鲜技术了，但是最近
           mPresenter = new HomePresenter(this);
           mPresenter.getPage();
       }
-
+  
       /**
        * Presenter用来设置数据的方法
        * @param content
@@ -71,8 +65,9 @@ DI（依赖注入）设计模式已经不是什么新鲜技术了，但是最近
       public void setPageContent(String content){
           textView.setText(content);
       }
-
+  
   }
+  ```
 
 
 
@@ -80,13 +75,13 @@ DI（依赖注入）设计模式已经不是什么新鲜技术了，但是最近
 
       private HomeActivity homeView;
       private HomeModel mModel;
-
+    
       // 构造器中创建Model
       public HomePresenter(HomeActivity homeView){
           this.homeView = homeView;
           mModel = new HomeModel();
       }
-
+    
       // 获取主页内容
       public void getPage(){
           mModel.getPage(pageText -> homeView.setPageContent(pageText));
