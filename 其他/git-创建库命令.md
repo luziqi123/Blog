@@ -26,7 +26,7 @@ git pull --rebase origin master
 
 git init 是必须的
 
-如果你已经在git上有了一个项目，那么需要建立通道 git remote [name] http://......
+如果你已经在git上有了一个项目，那么需要建立通道 git remote add  [name] http://......
 
 建立通道后，使用git remote updata [name]来更新通道
 
