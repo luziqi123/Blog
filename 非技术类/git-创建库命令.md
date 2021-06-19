@@ -40,7 +40,25 @@ git init 是必须的
 
 
 
+------
 
+如果项目存在大量的媒体文件 , 那么中央式仓库是比较合适的.
+
+**引用** : 类似于指针.
+
+- HEAD : 指向你当前的工作区
+
+
+
+### 命令行
+
+- git log : 查看历史提交日志
+- git merge --continue : 解决冲突后重新合并分支
+- git diff : 查看详细状态
+- git pull : 拉最新代码 , 其实分为两步 : git fetch /  get merge , 第一步获取最新改动 , 第二步将改动合并到当前分支.
+- git merge [breach] --no--ff : 合并分支 , 并创建一个新的commit.
+- git rebase [breach] : 
+- git commit  --amend : 提交新内容 , 并覆盖上一次的提交信息.
 
 
 

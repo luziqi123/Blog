@@ -117,16 +117,39 @@ Activity有4中启动方式：分别为：
 - **getLastNonConfigurationInstance** 上面已经提到了 , onRetainNonConfigurationInstance 方法返回一个Object , 这个方法则可以得到那个Object .
 - **onWindowFocusChanged** 当Activity焦点发生变化时被调用 .
 
+> 由A启动B 声明周期如下:
+> A:onPause() 
+> B:onCreate() - onStart() - onResume()
+> A:onStop()
+> 按返回由B回到A:
+> B:onPause()
+> A:onRestart() - onStart() - onResume()
+> B:onStope() - onDestroy()
+>
+> 如果B的`Theme`设置为`Dialog`or`Translucent` , 那么A只会调用onPuse()
+>
+> 另外 , Dialog和Toast都是由`WindowManager.addView()`来实现的 , 所以他们不会影响Activity的生命周期.
+
 # Activity的状态
 
-running / paused / stopped / killed . 
+- **running**  活动状态一切正常,在栈顶 
+- **paused**  失去焦点,不在栈顶,并不是被销毁,可能被回收
+- **stopped**  被完全覆盖 , 完全不可见 , 也可能被销毁 .
+- **killed**   已经被回收了.
 
-活动状态一切正常,在栈顶 / 失去焦点,不在栈顶,并不是被销毁,可能被回收 / 被完全覆盖 , 完全不可见 , 也可能被销毁 ./ 已经被回收了.
+**onStart()**的时候activity已经可以看见了,但无法交互. 
 
-onStart()的时候activity已经可以看见了,但无法交互. onResume() 可见并可交互. onPause调用之后activity就不能与用户交互了 , onStop调用之后,activity就有可能被回收. onRestart()从消失到可见时候调用.
+**onResume()** 可见并可交互. 
+
+**onPause()**调用之后activity就不能与用户交互了 , 
+
+**onStop()**调用之后,activity就有可能被回收. 
+
+**onRestart()**从消失到可见时候调用.
 
 # Activity与Window
 
 Activity只负责生命周期和事件处理
 Window只控制视图
-一个Activity包含一个Window，如果Activity没有Window，那就相当于Service
+一个Activity包含一个Window，如果Activity没有Window，那就相当于Service.
+

@@ -783,7 +783,7 @@ class InterceptorC{
     }
   ```
 
-  ​
+  
 
 - CallServerInterceptor 这是链表中的最后一个拦截器 , 如果说前面几个连接器只是对发送一次请求做出准备的话 , 那么他就是真正开始发送请求的拦截器了.
 
@@ -856,7 +856,7 @@ class InterceptorC{
     }
   ```
 
-  ​
+  
 
 代码步骤:
 
