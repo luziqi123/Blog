@@ -18,10 +18,21 @@ ClassLoader是被谁加载的? 什么时候加载的? 这就涉及到了**虚拟
 
 
 - 反射相关 . 反射的原理是什么?
-  - Classloader . Classloader是谁管理的? 
-    - 虚拟机 . 虚拟机是什么? 谁管理的?
-      - Zegote . Zegot是个进程 , 那进程是个什么机制? 谁管理的?
+  - Classloader . *Classloader是谁管理的?* 
+    - 虚拟机 . *虚拟机是什么? 谁管理的?*
+      - Zegote . Zegot是个进程 , *那进程是个什么机制? 谁管理的?*
         - Liunx的fork . 
+      - 
+
+
+
+
+
+## 参考
+
+**[Android 操作系统架构开篇](http://gityuan.com/android/)** 
+
+[Android源码网站](http://androidxref.com/)
 
 ## 开机
 
@@ -119,11 +130,7 @@ ART主要功能包括：预先(AOT)和即时(JIT)编译，优化的垃圾回收(
 
 
 
-Android源码网站 : http://androidxref.com/
 
-
-
-[Android 操作系统架构开篇](http://gityuan.com/android/) 高质量
 
 
 
